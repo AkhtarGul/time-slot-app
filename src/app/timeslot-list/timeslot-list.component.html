@@ -1,0 +1,60 @@
+<div class="container">
+  <div class="row row-cols-1 row-cols-lg-4 g-2 g-lg-3 mt-5">
+    <ng-container *ngFor="let item of listofTime">
+    <div class="col" >
+      <div class="p-3 border-primary border border-2 text-center text-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" [ngClass]="{'text-white text-bg-primary':getValue.id==item.id}"
+       (click)="bindVal(item)" >{{item.time}}</div>
+    </div>
+  </ng-container>
+  </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Book Slot For {{selectTime}}</h5>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+          <div class="col-12">
+            <label class="form-label" for="fName">First Name</label>
+            <input type="text" class="form-control " id="fName"  formControlName="fName" [ngClass]="{ 'is-invalid': submitted && f.fName.errors,'is-valid': f.fName.valid }">
+            <div *ngIf="submitted && f.fName.errors" class="invalid-feedback">
+              <div *ngIf="f.fName.errors['required']">First Name is required</div>
+          </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <label class="form-label" for="lName">Last Name</label>
+            <input type="text" class="form-control " id="lName"  formControlName="lName" [ngClass]="{ 'is-invalid': submitted && f.lName.errors,'is-valid': f.lName.valid }">
+            <div *ngIf="submitted && f.lName.errors" class="invalid-feedback">
+              <div *ngIf="f.lName.errors['required']">Last Name is required</div>
+          </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <label class="form-label" for="pNumber">Phone Number</label>
+            <input type="text" class="form-control " id="pNumber"  formControlName="pNumber" [ngClass]="{ 'is-invalid': submitted && f.pNumber.errors,'is-valid': f.pNumber.valid }">
+            <div *ngIf="submitted && f.pNumber.errors" class="invalid-feedback">
+              <div *ngIf="f.pNumber.errors['required']">Phone Number is required</div>
+          </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" >Save</button>
+        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal" (click)="restForm()">Cancel</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
