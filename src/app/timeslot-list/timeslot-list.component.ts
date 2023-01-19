@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { TimeslotService } from '../timeslot.service';
 
 @Component({
   selector: 'app-timeslot-list',
@@ -8,14 +9,15 @@ import { FormBuilder, Validators } from '@angular/forms';
 })
 export class TimeslotListComponent implements OnInit {
   submitted = false;
-  getValue:PersonalInfo = {}
-  constructor(private fb:FormBuilder) { }
+  getValue:PersonalInfo[] = []
+  obj:any = {}
+  constructor(private fb:FormBuilder,private timeSlotSrv:TimeslotService) { }
   selectTime:string=''
   @ViewChild('exampleModal',{static:true}) public exampleModal!: ElementRef;
   ngOnInit(): void {
-    this.getLocalStorage();
+    this.getAll();
   }
-listofTime=[
+listofTime:TimeSlot[]=[
   {
     id: 9,
     time: '9:00 AM'
@@ -52,7 +54,8 @@ listofTime=[
 bindVal(item:any){
   // alert(item.time);
   this.selectTime = item.time;
-  this.profileForm.controls['id'].setValue(+item.id);;
+  this.profileForm.controls['timeSlot'].setValue(+item.id);
+
 }
 listUser:PersonalInfo[]=[]
 onSubmit(){
@@ -63,23 +66,58 @@ onSubmit(){
           return;
       }
       if(this.profileForm.valid){
-        this.getValue.id = Number(JSON.stringify(this.profileForm.value.id));
-        this.getValue.fName = JSON.stringify(this.profileForm.value.fName)
-        this.getValue.lName = JSON.stringify(this.profileForm.value.lName)
-        this.getValue.pNumber = JSON.stringify(this.profileForm.value.pNumber)
+         this.obj = this.profileForm.value;
+        this.timeSlotSrv.saveTimeSlot(this.obj).subscribe(res=>{
+          console.table(res);
+         })
 
       }
-      this.listUser.push(this.getValue);
-  localStorage.setItem('personProfile',JSON.stringify(this.listUser))
+  //     this.listUser.push(this.obj);
+  // localStorage.setItem('personProfile',JSON.stringify(this.listUser))
   // window.location.reload();
 //   this.exampleModal.hide();
 }
+submitedId:any
+getAll(){
 
-getLocalStorage(){
-
-  this.getValue = JSON.parse(localStorage.getItem('personProfile') || '{}');
+  // this.getValue = JSON.parse(localStorage.getItem('personProfile') || '{}');
   // this.getValue
-  console.log(this.getValue);
+  // console.log(this.getValue);
+    this.timeSlotSrv.getAll().subscribe(res => {
+      res.forEach(i => {
+        this.checkTime(i.timeSlot);
+      });
+    });
+}
+checkTime(id:any){
+  switch (id) {
+    case 9:
+      this.submitedId = id;
+      break;
+    case 10:
+      this.submitedId = id;
+      break;
+    case 11:
+      this.submitedId = id;
+      break;
+    case 12:
+      this.submitedId = id;
+      break;
+    case 1:
+      this.submitedId = id;
+      break;
+    case 2:
+      this.submitedId = id;
+      break;
+      case 3:
+        this.submitedId = id;
+        break;
+      case 4:
+        this.submitedId = id;
+        break;
+      default:
+        console.log("Default is Zero");
+  }
 }
 restForm(){
   this.submitted = false;
@@ -92,7 +130,8 @@ profileForm = this.fb.group({
   id:[0,],
   fName: ['',Validators.required],
   lName:['',Validators.required],
-  pNumber:['',Validators.required]
+  pNumber:['',Validators.required],
+  timeSlot:[{}]
 })
 }
 
@@ -104,7 +143,7 @@ export interface TimeSlot{
 }
 
 export interface PersonalInfo{
-  id?:number;
+  id?:any;
   fName?:string;
   lName?:string;
   pNumber?:string;
